@@ -1,41 +1,45 @@
-import { Box, Typography, Chip, Avatar, Stack, Button } from "@mui/material";
+import {
+  Box, Typography, Chip, Avatar, Stack, Button, Dialog,
+  DialogTitle, DialogContent, DialogContentText, DialogActions
+} from "@mui/material";
 import { CalendarToday, ArrowBack, Delete, Edit } from "@mui/icons-material";
 import { Link, useParams } from "react-router";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MyContext } from "../App";
 
 const ViewPost = () => {
   const { posts, setPosts, setAlertMessage } = useContext(MyContext);
   const { ViewId } = useParams();
-  const post = posts.find((p) => p.id === parseInt(ViewId));
-
-  const handleDelete = (id) => {
-    const updatedPosts = posts.filter((post) => post.id !== id);
-    setPosts(updatedPosts);
-    setAlertMessage("Post deleted successfully!");
-  };
+  const post = posts.find(p => p.id === parseInt(ViewId));
+  const [open, setOpen] = useState(false);
 
   if (!post) return null;
 
+  const handleDelete = () => {
+    setPosts(posts.filter(p => p.id !== post.id));
+    setAlertMessage("Post deleted successfully!");
+    setOpen(false);
+  };
+
   return (
     <Box sx={{ mx: "auto", maxWidth: "md", p: 2 }}>
-      
-      <Stack direction="row"><Button component={Link} to="/" variant="outlined" startIcon={<ArrowBack />} >
+      <Stack direction="row">
+        <Button component={Link} to="/" variant="outlined" startIcon={<ArrowBack />}>
           Back
         </Button>
         <Stack direction="row" spacing={1} sx={{ ml: "auto" }}>
-          <Button component={Link} to={`/edit-post/${post.id}`} variant="outlined" startIcon={<Edit />} >
+          <Button component={Link} to={`/edit-post/${post.id}`} variant="outlined" startIcon={<Edit />}>
             Edit
           </Button>
-          <Button component={Link} to="/" onClick={() => handleDelete(post.id)} variant="contained" color="error" startIcon={<Delete />} >
+          <Button onClick={() => setOpen(true)} variant="contained" color="error" startIcon={<Delete />}>
             Delete
           </Button>
         </Stack>
       </Stack>
 
-      <Stack spacing={2} mb={4} mt={4}>
-        <Chip label={post.category} color="primary" sx={{ width: "fit-content", textTransform: "capitalize", }} />
-        <Typography variant="h3" component="h1" sx={{ fontWeight: 900, textTransform: "capitalize" }} >
+      <Stack spacing={2} my={4}>
+        <Chip label={post.category} color="primary" sx={{ width: "fit-content", textTransform: "capitalize" }} />
+        <Typography variant="h3" fontWeight={900} sx={{ textTransform: "capitalize" }}>
           {post.title}
         </Typography>
       </Stack>
@@ -43,7 +47,7 @@ const ViewPost = () => {
       <Box border={1} borderColor="divider" borderRadius={1} p={3} mb={3}>
         <Stack direction="row" alignItems="center" pb={2} mb={2} borderBottom={1} borderColor="divider">
           <Avatar src={post.avatar}>
-            {post.avatar ? "" : post.author.charAt(0).toUpperCase()}
+            {!post.avatar && post.author.charAt(0).toUpperCase()}
           </Avatar>
           <Typography variant="subtitle1" color="primary.light" ml={2}>
             {post.author}
@@ -59,7 +63,22 @@ const ViewPost = () => {
           {post.content}
         </Typography>
       </Box>
-      
+
+      {/* Confirmation Dialog */}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This action cannot be undone. This will permanently delete the post.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} variant="outlined">Cancel</Button>
+          <Button onClick={handleDelete} component={Link} to="/" variant="contained" color="error" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
