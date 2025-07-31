@@ -45,7 +45,7 @@ const LoadingState = () => (
 );
 
 const PostCard = ({ post }) => (
-  <Grid size={{ x:12, md:6}} >
+  <Grid size={{ xs:12, md:6}} >
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column", p: 2, boxShadow: 4 }}>
       <CardContent sx={{ flexGrow: 1 }}>
         <Chip label={post.category} color="primary" sx={{ mb: 2, textTransform: "capitalize" }} />
