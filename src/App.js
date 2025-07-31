@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Routes, Route } from "react-router";
 import PostsDashboard from "./Components/PostsDashboard";
 import ViewPost from "./Components/ViewPost";
@@ -7,6 +7,7 @@ import CreatePost from "./Components/CreatePost";
 import EditPost from "./Components/EditPost";
 import NotFoundPage from "./Components/NotFoundPage";
 import AlertMsg from "./Components/AlertMsg";
+import { getAllPosts, saveAllPosts } from "./idbHelper";
 import "@fontsource/inter";
 
 export const MyContext = createContext();
@@ -14,18 +15,43 @@ export const MyContext = createContext();
 const theme = createTheme({
   palette: {
     primary: { main: "#141414", light: "#616161", contrastText: "#fff" },
-    secondary: { main: "#ffffff", contrastText: "#000" },
+    secondary: { main: "#fff", contrastText: "#000" },
   },
-  typography: {fontFamily: "Inter, Arial, sans-serif"}
+  typography: { fontFamily: "Inter, Arial, sans-serif" },
 });
 
-function App() {
+export default function App() {
+  const [posts, setPosts] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
-  const [posts, setPosts] = useState( JSON.parse(localStorage.getItem("UserPosts")) || [] );
-  useEffect(() => localStorage.setItem("UserPosts", JSON.stringify(posts)), [posts]);
+  const [isDBReady, setIsDBReady] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setPosts(await getAllPosts());
+        setIsDBReady(true);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (isDBReady) {
+      (async () => {
+        try {
+          await saveAllPosts(posts);
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    }
+  }, [posts, isDBReady]);
 
   return (
-    <MyContext.Provider value={{ posts, setPosts, alertMessage, setAlertMessage }}>
+    <MyContext.Provider
+      value={{ posts, setPosts, alertMessage, setAlertMessage, isDBReady }}
+    >
       <ThemeProvider theme={theme}>
         <Routes>
           <Route path="/" element={<PostsDashboard />} />
@@ -39,5 +65,3 @@ function App() {
     </MyContext.Provider>
   );
 }
-
-export default App;

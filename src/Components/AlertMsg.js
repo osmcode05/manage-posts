@@ -14,7 +14,7 @@ export default function AlertMsg() {
       return () => clearTimeout(timer);
     }
     prevPosts.current = posts;
-  }, [posts]);
+  }, [alertMessage]);
 
   return (
     <Snackbar
