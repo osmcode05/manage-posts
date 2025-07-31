@@ -1,19 +1,17 @@
 import { Alert, Snackbar } from "@mui/material";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { MyContext } from "../App";
 
 export default function AlertMsg() {
-  const { posts, alertMessage } = useContext(MyContext);
+  const { alertMessage } = useContext(MyContext);
   const [open, setOpen] = useState(false);
-  const prevPosts = useRef(posts);
 
   useEffect(() => {
-    if (prevPosts.current !== posts) {
+    if (alertMessage !== "") { 
       setOpen(true);
-      const timer = setTimeout(() => setOpen(false), 2000);
+      const timer = setTimeout(() => setOpen(false), 4000);
       return () => clearTimeout(timer);
     }
-    prevPosts.current = posts;
   }, [alertMessage]);
 
   return (
