@@ -3,12 +3,12 @@ import {
   DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@mui/material";
 import { CalendarToday, ArrowBack, Delete, Edit } from "@mui/icons-material";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useContext, useState } from "react";
 import { MyContext } from "../App";
 
 const ViewPost = () => {
-  const { posts, setPosts, setAlertMessage } = useContext(MyContext);
+  const { posts, setPosts, setAlertMessage, navigate } = useContext(MyContext);
   const { ViewId } = useParams();
   const post = posts.find(p => p.id === parseInt(ViewId));
   const [open, setOpen] = useState(false);
@@ -17,21 +17,23 @@ const ViewPost = () => {
 
   const handleDelete = () => {
     setPosts(posts.filter(p => p.id !== post.id));
-    setAlertMessage("Post deleted successfully!");
+    setAlertMessage("Post Deleted successfully!");
     setOpen(false);
+    navigate("/");
   };
 
   return (
     <Box sx={{ mx: "auto", maxWidth: "md", p: 2 }}>
+      
       <Stack direction="row">
-        <Button component={Link} to="/" variant="outlined" startIcon={<ArrowBack />}>
+        <Button onClick={()=>navigate(-1)} variant="outlined" startIcon={<ArrowBack />}>
           Back
         </Button>
         <Stack direction="row" spacing={1} sx={{ ml: "auto" }}>
-          <Button component={Link} to={`/edit-post/${post.id}`} variant="outlined" startIcon={<Edit />}>
+          <Button onClick={() => navigate(`/edit-post/${post.id}`)} variant="outlined" startIcon={<Edit />}>
             Edit
           </Button>
-          <Button onClick={() => setOpen(true)} variant="contained" color="error" startIcon={<Delete />}>
+          <Button onClick={() => setOpen(true) } variant="contained" color="error" startIcon={<Delete />}>
             Delete
           </Button>
         </Stack>
@@ -74,11 +76,12 @@ const ViewPost = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} variant="outlined">Cancel</Button>
-          <Button onClick={handleDelete} component={Link} to="/" variant="contained" color="error" autoFocus>
+          <Button onClick={handleDelete} variant="contained" color="error" autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+      
     </Box>
   );
 };
