@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { MyContext } from "../App";
+import { useAppContext } from "../Contexts/AppContext";
 import {
   Avatar, Box, Button, Card, CardActions, CardContent, Chip,
   Container, Grid, Stack, Typography, CircularProgress,
@@ -104,7 +103,7 @@ const PostCard = ({ post, navigate }) => {
 };
 
 export default function PostsDashboard() {
-  const { posts, isDBReady, navigate } = useContext(MyContext);
+  const { posts, isDBReady, navigate } = useAppContext();
   return (
     <Box>
       <NavBar />

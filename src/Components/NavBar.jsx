@@ -1,10 +1,9 @@
 import { Add } from "@mui/icons-material";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import { useContext } from "react";
-import { MyContext } from "../App";
+import { useAppContext } from "../Contexts/AppContext";
 
 const NavBar = () => {
-  const { navigate } = useContext(MyContext);
+  const { navigate } = useAppContext();
   return (
     <AppBar position="sticky" elevation={0} sx={{ bgcolor: "secondary.main", p: 2, mb: 2, boxShadow: 5 }} >
       <Toolbar sx={{ flexWrap: "wrap", gap: 2 }}>

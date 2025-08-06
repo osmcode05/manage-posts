@@ -1,9 +1,9 @@
 import { Alert, Snackbar } from "@mui/material";
-import { useState, useEffect, useContext } from "react";
-import { MyContext } from "../App";
+import { useState, useEffect } from "react";
+import { useAppContext } from "../Contexts/AppContext";
 
 export default function AlertMsg() {
-  const { alertMessage } = useContext(MyContext);
+  const { alertMessage } = useAppContext();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { MyContext } from "../App";
+import { useEffect, useState } from "react";
+import { useAppContext } from "../Contexts/AppContext";
 import { useParams } from "react-router";
 import {
   Box,
@@ -28,7 +28,7 @@ const CATEGORIES = [
 const MAX_IMAGE_SIZE = 2; // MB
 
 const ManagePosts = ({ mood }) => {
-  const { posts, setPosts, setAlertMessage, navigate } = useContext(MyContext);
+  const { posts, setPosts, setAlertMessage, navigate } = useAppContext();
   const { EditId } = useParams();
   const [imageStatus, setImageStatus] = useState({ error: "", info: "" });
   const [post, setPost] = useState(null);

@@ -4,11 +4,11 @@ import {
 } from "@mui/material";
 import { CalendarToday, ArrowBack, Delete, Edit } from "@mui/icons-material";
 import { useParams } from "react-router";
-import { useContext, useState } from "react";
-import { MyContext } from "../App";
+import { useState } from "react";
+import { useAppContext } from "../Contexts/AppContext";
 
 const ViewPost = () => {
-  const { posts, setPosts, setAlertMessage, navigate } = useContext(MyContext);
+  const { posts, setPosts, setAlertMessage, navigate } = useAppContext();
   const { ViewId } = useParams();
   const post = posts.find(p => p.id === parseInt(ViewId));
   const [open, setOpen] = useState(false);

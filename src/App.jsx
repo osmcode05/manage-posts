@@ -1,15 +1,12 @@
-import { useState, createContext, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Routes, Route, useNavigate } from "react-router";
+import { Routes, Route } from "react-router";
 import PostsDashboard from "./Components/PostsDashboard";
 import ViewPost from "./Components/ViewPost";
 import ManagePosts from "./Components/ManagePosts";
 import NotFoundPage from "./Components/NotFoundPage";
 import AlertMsg from "./Components/AlertMsg";
-import { getAllPosts, saveAllPosts } from "./idbHelper";
+import AppContextsProvider from "./Contexts/AppContext";
 import "@fontsource/inter";
-
-export const MyContext = createContext();
 
 const theme = createTheme({
   palette: {
@@ -20,31 +17,8 @@ const theme = createTheme({
 });
 
 export default function App() {
-  const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [isDBReady, setIsDBReady] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try { setPosts(await getAllPosts()); setIsDBReady(true); }
-      catch (err) {console.error(err);}
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (isDBReady) {
-      (async () => {
-        try { await saveAllPosts(posts); }
-        catch (err) {console.error(err)}
-      })();
-    }
-  }, [posts, isDBReady]);
-
   return (
-    <MyContext.Provider
-      value={{ posts, setPosts, alertMessage, setAlertMessage, isDBReady, navigate }}
-    >
+    <AppContextsProvider>
       <ThemeProvider theme={theme}>
         <Routes>
           <Route path="/" element={<PostsDashboard />} />
@@ -55,6 +29,6 @@ export default function App() {
         </Routes>
         <AlertMsg />
       </ThemeProvider>
-    </MyContext.Provider>
+    </AppContextsProvider>
   );
 }
